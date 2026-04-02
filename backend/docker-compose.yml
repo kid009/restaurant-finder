@@ -1,0 +1,60 @@
+networks:
+  web_network:
+    name: laravelapi_network
+    driver: bridge
+
+services:
+
+  # -------------------------------------
+  # 1. Database Service 
+  # -------------------------------------
+  db:
+    image: mysql:8.0
+    container_name: laravelapi_mysql
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${DB_DATABASE}
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+    ports:
+      - "3309:3306"
+    restart: unless-stopped
+    networks:
+      - web_network
+
+  # -------------------------------------
+  # 2. PHP App Service 
+  # -------------------------------------
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: laravelapi-app:local
+    container_name: laravelapi_app
+    restart: unless-stopped
+    volumes:
+      - ./src:/var/www
+    networks:
+      - web_network
+    depends_on:
+      - db 
+
+  # -------------------------------------
+  # 3. Nginx Service 
+  # -------------------------------------
+  nginx:
+    image: nginx:alpine
+    container_name: laravelapi_nginx
+    volumes:
+      - ./src:/var/www
+      - ./nginx/conf:/etc/nginx/conf.d
+    ports:
+      - "8081:80"
+    restart: unless-stopped
+    networks:
+      - web_network
+    depends_on:
+      - app
+

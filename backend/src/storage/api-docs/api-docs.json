@@ -1,0 +1,123 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Restaurant Finder API",
+        "description": "API documentation for Restaurant Finder",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8081",
+            "description": "Local development server"
+        }
+    ],
+    "paths": {
+        "/api/restaurants": {
+            "get": {
+                "tags": [
+                    "Restaurants"
+                ],
+                "summary": "Get list of restaurants",
+                "description": "Returns a list of restaurants matching the keyword",
+                "operationId": "b838384b35597707b6c46925fe4f77f1",
+                "parameters": [
+                    {
+                        "name": "keyword",
+                        "in": "query",
+                        "description": "Search keyword for restaurant name (Default: null)",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Restaurant"
+                                            }
+                                        },
+                                        "keyword": {
+                                            "type": "string",
+                                            "nullable": true
+                                        },
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Restaurant": {
+                "title": "Restaurant Model",
+                "description": "ข้อมูลรายละเอียดของร้านอาหาร",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "restaurant_name": {
+                        "type": "string",
+                        "example": "Pad Thai Bang Sue"
+                    },
+                    "restaurant_latitude": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 13.804921
+                    },
+                    "restaurant_longitude": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 100.539012
+                    },
+                    "restaurant_address": {
+                        "type": "string",
+                        "example": "123 Pracharat Sai 2 Rd., Bang Sue"
+                    },
+                    "restaurant_province": {
+                        "type": "string",
+                        "example": "Bangkok"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-05-15T12:00:00Z",
+                        "nullable": true
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-05-15T12:00:00Z",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Restaurants",
+            "description": "Restaurants"
+        }
+    ]
+}

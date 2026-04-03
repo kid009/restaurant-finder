@@ -4,16 +4,16 @@ WORKDIR /app
 
 EXPOSE 5173
 
-# รันคำสั่งทั้งหมดเมื่อ Container เริ่มทำงาน (ใช้ sh -c เพื่อรันแบบ Shell script)
+# ปรับปรุง: ให้รัน npm install เสมอก่อนรันเซิร์ฟเวอร์
 CMD sh -c "\
     if [ ! -f package.json ]; then \
     echo 'กำลังสร้างโปรเจกต์ Vue...'; \
     npm install -g create-vite && \
     create-vite temp-vue --template vue && \
     cp -a temp-vue/. . && \
-    rm -rf temp-vue && \
-    npm install; \
+    rm -rf temp-vue; \
     else \
     echo 'พบโปรเจกต์อยู่แล้ว ข้ามการสร้างใหม่...'; \
     fi && \
+    npm install && \
     npm run dev -- --host"

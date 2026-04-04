@@ -12,7 +12,7 @@
   </div>
 
   <!-- Search Bar Section -->
-  <div class="row justify-content-center mb-5">
+  <div class="row justify-content-center mb-3">
     <div class="col-md-8 col-lg-6">
       <div class="input-group input-group-lg shadow-sm">
         <span class="input-group-text bg-white border-end-0">
@@ -24,7 +24,6 @@
           class="form-control border-start-0"
           placeholder="name..."
           v-model="keyword"
-          @keyup.enter="search"
         />
         <button class="btn btn-primary px-4" @click="search">
           <span>Search</span>
@@ -33,7 +32,7 @@
     </div>
   </div>
 
-  <div class="row justify-content-center">
+  <div class="row justify-content-center mb-3">
     <div class="spinner-border text-primary" v-if="loading"></div>
   </div>
 
@@ -81,7 +80,7 @@
 
 <script setup>
 // 1. นำเข้า Composition API
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import axios from "axios";
 
 // 2. ประกาศตัวแปร Reactive
@@ -90,6 +89,7 @@ const errorMessage = ref("");
 const loading = ref(false);
 const keyword = ref(""); // ตัวแปรสำหรับเก็บคำค้นหาที่ผูกกับ v-model
 const hasSearched = ref(false);
+let debounceTimer = null;
 
 // 3. ฟังก์ชันดึงข้อมูล (รองรับการส่ง parameter)
 const getData = async (searchQuery = "") => {
@@ -114,6 +114,15 @@ const getData = async (searchQuery = "") => {
     loading.value = false;
   }
 };
+
+watch(keyword, (newValue) => {
+  clearTimeout(debounceTimer);
+
+  debounceTimer = setTimeout(() => {
+    hasSearched.value = true;
+    getData(newValue);
+  }, 500);
+});
 
 // 4. ฟังก์ชันสำหรับปุ่ม Search
 const search = () => {

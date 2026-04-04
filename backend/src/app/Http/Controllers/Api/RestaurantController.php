@@ -41,7 +41,7 @@ class RestaurantController extends Controller
     )]
     public function index(Request $request)
     {
-        $keyword = $request->query('keyword');
+        $keyword = $request->query('name');
 
         $restaurants = Restaurant::where('restaurant_name', 'LIKE', "%{$keyword}%")->get();
 

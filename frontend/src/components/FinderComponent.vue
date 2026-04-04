@@ -101,7 +101,7 @@ const getData = async (searchQuery = "") => {
     // จะได้ URL ประมาณนี้: http://localhost:8081/api/restaurants?name=ค่าที่พิมพ์
     const response = await axios.get("http://localhost:8081/api/restaurants", {
       params: {
-        name: searchQuery,
+        keyword: searchQuery,
       },
     });
 

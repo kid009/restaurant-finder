@@ -3,12 +3,19 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Restaurant;
+use App\Services\RestaurantService;
 use Illuminate\Http\Request;
 use OpenApi\Attributes as OA;
 
 class RestaurantController extends Controller
 {
+    protected $restaurantsService;
+
+    public function __construct(RestaurantService $restaurantsService)
+    {
+        $this->restaurantsService = $restaurantsService;
+    }
+
     #[OA\Get(
         path: "/api/restaurants",
         summary: "Get list of restaurants",
@@ -41,13 +48,13 @@ class RestaurantController extends Controller
     )]
     public function index(Request $request)
     {
-        $keyword = $request->query('name');
+        $rawKeyword = $request->query('keyword');
 
-        $restaurants = Restaurant::where('restaurant_name', 'LIKE', "%{$keyword}%")->get();
+        $result = $this->restaurantsService->searchRestaurant($rawKeyword);
 
         return response()->json([
-            'data' => $restaurants,
-            'keyword' => $keyword,
+            'data' => $result['data'],
+            'keyword' => $result['keyword'],
             'status' => true,
         ], 200);
     }

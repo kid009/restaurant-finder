@@ -18,7 +18,7 @@ class RestaurantService
         $cacheKey = 'search_' . strtolower(str_replace(' ', '_', $cleanKeyword));
 
         $restaurants = Cache::remember($cacheKey, 3600, function () use ($cleanKeyword) {
-            return Restaurant::where('restaurant_name', 'LIKE', "%{$cleanKeyword}%")->get();
+            return Restaurant::where('restaurant_name', 'LIKE', "%{$cleanKeyword}%")->get()->toArray();
         });
 
         return [

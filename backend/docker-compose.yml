@@ -14,13 +14,13 @@ services:
     volumes:
       - ./mysql/data:/var/lib/mysql
     environment:
-      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
-      - MYSQL_DATABASE=${DB_DATABASE}
-      - MYSQL_USER=${DB_USER}
-      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=1234
+      - MYSQL_DATABASE=db_restaurant_finder
+      - MYSQL_USER=admin
+      - MYSQL_PASSWORD=1234
     ports:
       - "3309:3306"
-    restart: unless-stopped
+    restart: always
     networks:
       - web_network
 
@@ -33,13 +33,13 @@ services:
       dockerfile: Dockerfile
     image: laravelapi-app:local
     container_name: laravelapi_app
-    restart: unless-stopped
+    restart: always
     volumes:
       - ./src:/var/www
     networks:
       - web_network
     depends_on:
-      - db 
+      - db
 
   # -------------------------------------
   # 3. Nginx Service 
@@ -52,7 +52,7 @@ services:
       - ./nginx/conf:/etc/nginx/conf.d
     ports:
       - "8081:80"
-    restart: unless-stopped
+    restart: always
     networks:
       - web_network
     depends_on:
